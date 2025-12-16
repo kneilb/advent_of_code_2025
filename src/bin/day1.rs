@@ -1,14 +1,26 @@
 // https://adventofcode.com/2025/day/1
 
+fn parse(input: &str) -> Vec<i32> {
+    input
+        .lines()
+        .map(|line| {
+            let (dir, rest) = line.trim().split_at(1);
+            let count: i32 = rest.parse().unwrap();
+
+            match dir.chars().next() {
+                Some('L') => count * -1,
+                Some('R') => count,
+                _ => panic!("Unknown direction"),
+            }
+        })
+        .collect()
+}
+
 fn day1(input: &str) -> i32 {
     let mut position: i32 = 50;
     let mut zeroes: i32 = 0;
 
-    for line in input.lines() {
-        let mut chars = line.chars();
-        let is_forward: bool = chars.next().unwrap() == 'R';
-        let count: i32 = chars.as_str().parse::<i32>().unwrap();
-        let delta: i32 = count * if is_forward { 1 } else { -1 };
+    for delta in parse(input) {
         position += delta;
         while position < 0 {
             position += 100;
@@ -19,7 +31,7 @@ fn day1(input: &str) -> i32 {
         if position == 0 {
             zeroes += 1;
         }
-        println!("{} : Position is {}, Zeroes is {}", line, position, zeroes);
+        println!("{} : Position is {}, Zeroes is {}", delta, position, zeroes);
     }
 
     zeroes
@@ -29,10 +41,9 @@ fn day1b(input: &str) -> i32 {
     let mut position: i32 = 50;
     let mut zeroes: i32 = 0;
 
-    for line in input.lines() {
-        let mut chars = line.chars();
-        let change: i32 = if chars.next().unwrap() == 'R' { 1 } else { -1 };
-        let mut count: i32 = chars.as_str().parse::<i32>().unwrap();
+    for delta in parse(input) {
+        let mut count: i32 = i32::abs(delta);
+        let change = delta / count;
         while count > 0 {
             position += change;
             if position > 99 {
@@ -46,7 +57,7 @@ fn day1b(input: &str) -> i32 {
             }
             count -= 1;
         }
-        println!("{} : Position is {}, Zeroes is {}", line, position, zeroes);
+        println!("{} : Position is {}, Zeroes is {}", delta, position, zeroes);
     }
 
     zeroes
