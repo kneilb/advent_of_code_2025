@@ -52,7 +52,6 @@ fn day1b(input: &str) -> i32 {
     zeroes
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
