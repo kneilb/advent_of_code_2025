@@ -4,8 +4,7 @@ fn parse(input: &str) -> Vec<Vec<u32>> {
     input
         .lines()
         .map(|line| {
-            line
-                .chars()
+            line.chars()
                 .map(|char| char.to_digit(10).unwrap() as u32)
                 .collect()
         })

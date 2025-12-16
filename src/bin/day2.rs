@@ -19,7 +19,6 @@ fn day2(input: &str) -> usize {
     let mut total = 0;
 
     for (start, end) in parse(input) {
-
         for current in start..=end {
             let string_num = format!("{}", current);
             // Check string has an even number of characters.
