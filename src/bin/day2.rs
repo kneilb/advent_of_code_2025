@@ -1,29 +1,34 @@
 // https://adventofcode.com/2025/day/2
 
-fn day2(input: &str) -> i64 {
+fn parse(input: &str) -> Vec<(usize, usize)> {
+    input
+        .lines()
+        .flat_map(|line| line.split(',')) // Flat map removes the extra level of iterators!
+        .map(|range| range.split('-'))
+        .map(|mut ends| {
+            (
+                ends.next().unwrap().parse().unwrap(),
+                ends.next().unwrap().parse().unwrap(),
+            )
+        })
+        .collect()
+}
+
+fn day2(input: &str) -> usize {
     let mut total = 0;
 
-    for line in input.lines() {
-        for range in line.split(",") {
-            let mut items = range.split("-");
-            let start: i64 = items.next().unwrap().parse().unwrap();
-            let end: i64 = items.next().unwrap().parse().unwrap();
+    for (start, end) in parse(input) {
 
-            // println!("RANGE: {} to {}", start, end);
-
-            let mut current = start;
-            while current <= end {
-                let string_num = format!("{}", current);
-                // Check string has an even number of characters.
-                // Makes no sense otherwise!
-                if string_num.chars().count() % 2 == 0 {
-                    let (s1, s2) = string_num.split_at(string_num.chars().count() / 2);
-                    if s1 == s2 {
-                        // println!("{} {}", s1, s2);
-                        total += current;
-                    }
+        for current in start..=end {
+            let string_num = format!("{}", current);
+            // Check string has an even number of characters.
+            // Makes no sense otherwise!
+            if string_num.chars().count() % 2 == 0 {
+                let (s1, s2) = string_num.split_at(string_num.chars().count() / 2);
+                if s1 == s2 {
+                    // println!("{} {}", s1, s2);
+                    total += current;
                 }
-                current += 1;
             }
         }
     }
