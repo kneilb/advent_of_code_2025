@@ -1,15 +1,78 @@
 // https://adventofcode.com/2025/day/4
 
-fn parse(input: &str) -> Vec<Vec<bool>> {
-    input
+#[derive(Copy, Clone, Debug, PartialEq)]
+enum Content {
+    Empty,
+    RollOfPaper,
+}
+
+struct Grid {
+    grid: Vec<Vec<Content>>,
+    width: usize,
+    height: usize,
+}
+
+impl Grid {
+    fn new(grid: Vec<Vec<Content>>) -> Grid {
+        let width = grid[0].len();
+        let height = grid.len();
+        Grid {
+            grid,
+            width,
+            height,
+        }
+    }
+
+    fn has_paper(&self, x: usize, y: usize) -> bool {
+        self.grid[y][x] == Content::RollOfPaper
+    }
+
+    fn remove_paper(&mut self, x: usize, y: usize) {
+        assert!(self.grid[y][x] == Content::RollOfPaper);
+        self.grid[y][x] = Content::Empty;
+    }
+
+    fn is_accessible(&self, x: usize, y: usize) -> bool {
+        let mut surrounding_rolls = 0;
+
+        for dir in DIRECTIONS {
+            let search_x: i32 = x as i32 + dir.0;
+            let search_y: i32 = y as i32 + dir.1;
+
+            if search_x < 0 || search_y < 0 {
+                continue;
+            }
+
+            let search_x: usize = search_x as usize;
+            let search_y: usize = search_y as usize;
+            if search_y >= self.height || search_x >= self.width {
+                continue;
+            }
+
+            if self.grid[search_y][search_x] == Content::RollOfPaper {
+                surrounding_rolls += 1;
+            }
+        }
+
+        surrounding_rolls < 4
+    }
+}
+
+fn parse(input: &str) -> Grid {
+    let grid = input
         .lines()
         .map(|line| {
-            line
-                .chars()
-                .map(|char| char == '@')
+            line.chars()
+                .map(|char| match char {
+                    '@' => Content::RollOfPaper,
+                    '.' => Content::Empty,
+                    _ => panic!("Unexpected panda in the bagging area"),
+                })
                 .collect()
         })
-        .collect()
+        .collect();
+
+    Grid::new(grid)
 }
 
 fn day4(input: &str) -> u32 {
@@ -17,10 +80,9 @@ fn day4(input: &str) -> u32 {
 
     let grid = parse(input);
 
-    for (y, row) in grid.clone().into_iter().enumerate() {
-        for (x, col) in row.into_iter().enumerate() {
-            println!("FOUND {} at {}, {}", col, x, y);
-            if col && is_accessible(&grid, x, y) {
+    for y in 0..grid.height {
+        for x in 0..grid.width {
+            if grid.has_paper(x, y) && grid.is_accessible(x, y) {
                 accessible_rolls += 1;
             }
         }
@@ -34,55 +96,23 @@ const DIRECTIONS: [(i32, i32); 8] = [
     (0, -1),  // up
     (1, -1),  // up / right
     (-1, 0),  // left
-    // no (0, 0) - that's us
     (1, 0),   // right
     (-1, 1),  // down / left
     (0, 1),   // down
-    (1, 1)    // down / right
+    (1, 1),   // down / right
 ];
-
-fn is_accessible(grid: &Vec<Vec<bool>>, x: usize, y: usize) -> bool {
-    let mut surrounding_rolls = 0;
-
-    for dir in DIRECTIONS {
-        let search_x: i32 = x as i32 + dir.0;
-        let search_y: i32 = y as i32 + dir.1;
-
-        if search_x < 0 || search_y < 0 {
-            continue;
-        }
-
-        let search_x: usize = search_x as usize;
-        let search_y: usize = search_y as usize;
-        if search_y >= grid.len() || search_x >= grid[0].len() {
-            continue;
-        }
-
-        if grid[search_y][search_x] {
-            surrounding_rolls += 1;
-        }
-    }
-
-    surrounding_rolls < 4
-}
 
 fn day4b(input: &str) -> u32 {
     let mut total_moved_rolls = 0;
 
     let mut grid = parse(input);
 
-    // Assumes all row & columns have the same length...
-    let height: usize = grid.len();
-    let width: usize = grid[0].len();
-
     loop {
         let mut moved_rolls = 0;
-        for y in 0..height {
-            for x in 0..width {
-                let mut has_roll = &grid[y][x];
-                println!("FOUND {} at {}, {}", *has_roll, x, y);
-                if *has_roll && is_accessible(&grid, x, y) {
-                    grid[y][x] = false;
+        for y in 0..grid.height {
+            for x in 0..grid.width {
+                if grid.has_paper(x, y) && grid.is_accessible(x, y) {
+                    grid.remove_paper(x, y);
                     moved_rolls += 1;
                 }
             }
@@ -95,7 +125,6 @@ fn day4b(input: &str) -> u32 {
 
     total_moved_rolls
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -128,5 +157,4 @@ mod tests {
         let result = day4b(&data);
         assert_eq!(result, 9397);
     }
-
 }
