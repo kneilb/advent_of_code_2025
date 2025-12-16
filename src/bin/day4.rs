@@ -6,6 +6,17 @@ enum Content {
     RollOfPaper,
 }
 
+const DIRECTIONS: [(i32, i32); 8] = [
+    (-1, -1), // up / left
+    (0, -1),  // up
+    (1, -1),  // up / right
+    (-1, 0),  // left
+    (1, 0),   // right
+    (-1, 1),  // down / left
+    (0, 1),   // down
+    (1, 1),   // down / right
+];
+
 struct Grid {
     grid: Vec<Vec<Content>>,
     width: usize,
@@ -23,33 +34,33 @@ impl Grid {
         }
     }
 
-    fn has_paper(&self, x: usize, y: usize) -> bool {
-        self.grid[y][x] == Content::RollOfPaper
-    }
-
     fn remove_paper(&mut self, x: usize, y: usize) {
         assert!(self.grid[y][x] == Content::RollOfPaper);
         self.grid[y][x] = Content::Empty;
     }
 
-    fn is_accessible(&self, x: usize, y: usize) -> bool {
+    fn can_move_paper(&self, x: usize, y: usize) -> bool {
+        if self.grid[y][x] == Content::Empty {
+            return false;
+        }
+
         let mut surrounding_rolls = 0;
 
         for dir in DIRECTIONS {
-            let search_x: i32 = x as i32 + dir.0;
-            let search_y: i32 = y as i32 + dir.1;
+            let x: i32 = x as i32 + dir.0;
+            let y: i32 = y as i32 + dir.1;
 
-            if search_x < 0 || search_y < 0 {
+            if x < 0 || y < 0 {
                 continue;
             }
 
-            let search_x: usize = search_x as usize;
-            let search_y: usize = search_y as usize;
-            if search_y >= self.height || search_x >= self.width {
+            let x: usize = x as usize;
+            let y: usize = y as usize;
+            if y >= self.height || x >= self.width {
                 continue;
             }
 
-            if self.grid[search_y][search_x] == Content::RollOfPaper {
+            if self.grid[y][x] == Content::RollOfPaper {
                 surrounding_rolls += 1;
             }
         }
@@ -82,7 +93,7 @@ fn day4(input: &str) -> u32 {
 
     for y in 0..grid.height {
         for x in 0..grid.width {
-            if grid.has_paper(x, y) && grid.is_accessible(x, y) {
+            if grid.can_move_paper(x, y) {
                 accessible_rolls += 1;
             }
         }
@@ -90,17 +101,6 @@ fn day4(input: &str) -> u32 {
 
     accessible_rolls
 }
-
-const DIRECTIONS: [(i32, i32); 8] = [
-    (-1, -1), // up / left
-    (0, -1),  // up
-    (1, -1),  // up / right
-    (-1, 0),  // left
-    (1, 0),   // right
-    (-1, 1),  // down / left
-    (0, 1),   // down
-    (1, 1),   // down / right
-];
 
 fn day4b(input: &str) -> u32 {
     let mut total_moved_rolls = 0;
@@ -111,7 +111,7 @@ fn day4b(input: &str) -> u32 {
         let mut moved_rolls = 0;
         for y in 0..grid.height {
             for x in 0..grid.width {
-                if grid.has_paper(x, y) && grid.is_accessible(x, y) {
+                if grid.can_move_paper(x, y) {
                     grid.remove_paper(x, y);
                     moved_rolls += 1;
                 }
