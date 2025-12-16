@@ -3,7 +3,8 @@
 fn parse(input: &str) -> Vec<(usize, usize)> {
     input
         .lines()
-        .flat_map(|line| line.split(',')) // Flat map removes the extra level of iterators!
+        .map(|line| line.split(','))
+        .flatten() // Use flatten to turn the Vec<Vec<str>> into Vec<str>
         .map(|range| range.split('-'))
         .map(|mut ends| {
             (
