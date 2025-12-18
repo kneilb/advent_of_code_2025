@@ -8,7 +8,7 @@ fn parse(input: &str) -> Vec<i32> {
             let count: i32 = rest.parse().unwrap();
 
             match dir.chars().next() {
-                Some('L') => count * -1,
+                Some('L') => -count,
                 Some('R') => count,
                 _ => panic!("Unknown direction"),
             }
@@ -16,7 +16,7 @@ fn parse(input: &str) -> Vec<i32> {
         .collect()
 }
 
-fn day1(input: &str) -> i32 {
+fn day_1_part_1(input: &str) -> i32 {
     let mut position: i32 = 50;
     let mut zeroes: i32 = 0;
 
@@ -37,7 +37,7 @@ fn day1(input: &str) -> i32 {
     zeroes
 }
 
-fn day1b(input: &str) -> i32 {
+fn day_1_part_2(input: &str) -> i32 {
     let mut position: i32 = 50;
     let mut zeroes: i32 = 0;
 
@@ -68,36 +68,40 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day1_example() {
+    fn day_1_part_1_example() {
         let data = std::fs::read_to_string("data/day1_example.txt").unwrap();
-        let result = day1(&data);
+        let result = day_1_part_1(&data);
         assert_eq!(result, 3);
     }
 
     #[test]
-    fn day1_real() {
+    fn day_1_part_1_real() {
         let data = std::fs::read_to_string("data/day1.txt").unwrap();
-        let result = day1(&data);
+        let result = day_1_part_1(&data);
         assert_eq!(result, 1191);
     }
 
     #[test]
-    fn day1b_example() {
+    fn day_1_part_2_example() {
         let data = std::fs::read_to_string("data/day1_example.txt").unwrap();
-        let result = day1b(&data);
+        let result = day_1_part_2(&data);
         assert_eq!(result, 6);
     }
 
     #[test]
-    fn day1b_real() {
+    fn day_1_part_2_real() {
         let data = std::fs::read_to_string("data/day1.txt").unwrap();
-        let result = day1b(&data);
+        let result = day_1_part_2(&data);
         assert_eq!(result, 6858);
     }
 }
 
 fn main() {
     let data = std::fs::read_to_string("data/day1.txt").unwrap();
-    let result = day1(&data);
-    println!("The result is {}", result);
+
+    let result_1 = day_1_part_1(&data);
+    println!("Part 1: {}", result_1);
+
+    let result_2 = day_1_part_2(&data);
+    println!("Part 2: {}", result_2);
 }

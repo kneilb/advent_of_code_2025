@@ -3,8 +3,7 @@
 fn parse(input: &str) -> Vec<(usize, usize)> {
     input
         .lines()
-        .map(|line| line.split(','))
-        .flatten() // Use flatten to turn the Vec<Vec<str>> into Vec<str>
+        .flat_map(|line| line.split(',')) // Uses flatten to turn the Vec<Vec<str>> into Vec<str>
         .map(|range| range.split('-'))
         .map(|mut ends| {
             (
@@ -15,7 +14,7 @@ fn parse(input: &str) -> Vec<(usize, usize)> {
         .collect()
 }
 
-fn day2(input: &str) -> usize {
+fn day_2_part_1(input: &str) -> usize {
     let mut total = 0;
 
     for (start, end) in parse(input) {
@@ -41,22 +40,23 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day2_example() {
+    fn day_2_part_1_example() {
         let data = std::fs::read_to_string("data/day2_example.txt").unwrap();
-        let result = day2(&data);
+        let result = day_2_part_1(&data);
         assert_eq!(result, 1227775554);
     }
 
     #[test]
-    fn day2_real() {
+    fn day_2_part_1_real() {
         let data = std::fs::read_to_string("data/day2.txt").unwrap();
-        let result = day2(&data);
+        let result = day_2_part_1(&data);
         assert_eq!(result, 44487518055);
     }
 }
 
 fn main() {
     let data = std::fs::read_to_string("data/day2.txt").unwrap();
-    let result = day2(&data);
-    println!("The result is {}", result);
+
+    let result_1 = day_2_part_1(&data);
+    println!("Part 1: {}", result_1);
 }

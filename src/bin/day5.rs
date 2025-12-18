@@ -23,7 +23,7 @@ fn parse(input: &str) -> (Vec<Range>, Vec<usize>) {
     )
 }
 
-fn day5(input: &str) -> usize {
+fn day_5_part_1(input: &str) -> usize {
     let (ranges, ids) = parse(input);
     let mut fresh_ingredients = 0;
 
@@ -40,9 +40,8 @@ fn day5(input: &str) -> usize {
 }
 
 // TODO: optimise!!! :D
-fn day5b(input: &str) -> usize {
-    let (ranges, ids) = parse(input);
-    let mut fresh_ingredients = 0;
+fn day_5_part_2(input: &str) -> usize {
+    let (ranges, _ids) = parse(input);
 
     let mut fresh_ids: HashSet<usize> = HashSet::new();
 
@@ -60,36 +59,40 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day5_example() {
+    fn day_5_part_1_example() {
         let data = std::fs::read_to_string("data/day5_example.txt").unwrap();
-        let result = day5(&data);
+        let result = day_5_part_1(&data);
         assert_eq!(result, 3);
     }
 
     #[test]
-    fn day5_real() {
+    fn day_5_part_1_real() {
         let data = std::fs::read_to_string("data/day5.txt").unwrap();
-        let result = day5(&data);
+        let result = day_5_part_1(&data);
         assert_eq!(result, 661);
     }
 
     #[test]
-    fn day5b_example() {
+    fn day_5_part_2_example() {
         let data = std::fs::read_to_string("data/day5_example.txt").unwrap();
-        let result = day5b(&data);
+        let result = day_5_part_2(&data);
         assert_eq!(result, 14);
     }
 
     // #[test]
-    // fn day5b_real() {
+    // fn day_5_part_2_real() {
     //     let data = std::fs::read_to_string("data/day5.txt").unwrap();
-    //     let result = day5b(&data);
+    //     let result = day_5_part_2(&data);
     //     assert_eq!(result, 661);
     // }
 }
 
 fn main() {
     let data = std::fs::read_to_string("data/day5.txt").unwrap();
-    let result = day5(&data);
-    println!("The result is {}", result);
+
+    let result_1 = day_5_part_1(&data);
+    println!("Part 1: {}", result_1);
+
+    // let result_2 = day_5_part_2(&data);
+    // println!("Part 2: {}", result_2);
 }

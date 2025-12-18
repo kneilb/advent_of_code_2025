@@ -86,7 +86,7 @@ fn parse(input: &str) -> Grid {
     Grid::new(grid)
 }
 
-fn day4(input: &str) -> u32 {
+fn day_4_part_1(input: &str) -> u32 {
     let mut accessible_rolls = 0;
 
     let grid = parse(input);
@@ -102,7 +102,7 @@ fn day4(input: &str) -> u32 {
     accessible_rolls
 }
 
-fn day4b(input: &str) -> u32 {
+fn day_4_part_2(input: &str) -> u32 {
     let mut total_moved_rolls = 0;
 
     let mut grid = parse(input);
@@ -131,30 +131,40 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day4_example() {
+    fn day_4_part_1_example() {
         let data = std::fs::read_to_string("data/day4_example.txt").unwrap();
-        let result = day4(&data);
+        let result = day_4_part_1(&data);
         assert_eq!(result, 13);
     }
 
     #[test]
-    fn day4_real() {
+    fn day_4_part_1_real() {
         let data = std::fs::read_to_string("data/day4.txt").unwrap();
-        let result = day4(&data);
+        let result = day_4_part_1(&data);
         assert_eq!(result, 1604);
     }
 
     #[test]
-    fn day4b_example() {
+    fn day_4_part_2_example() {
         let data = std::fs::read_to_string("data/day4_example.txt").unwrap();
-        let result = day4b(&data);
+        let result = day_4_part_2(&data);
         assert_eq!(result, 43);
     }
 
     #[test]
-    fn day4b_real() {
+    fn day_4_part_2_real() {
         let data = std::fs::read_to_string("data/day4.txt").unwrap();
-        let result = day4b(&data);
+        let result = day_4_part_2(&data);
         assert_eq!(result, 9397);
     }
+}
+
+fn main() {
+    let data = std::fs::read_to_string("data/day4.txt").unwrap();
+
+    let result_1 = day_4_part_1(&data);
+    println!("Part 1: {}", result_1);
+
+    let result_2 = day_4_part_2(&data);
+    println!("Part 2: {}", result_2);
 }
